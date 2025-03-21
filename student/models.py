@@ -1,4 +1,3 @@
-
 from django.db import models
 
 class EducationType(models.TextChoices):
@@ -20,9 +19,23 @@ class StudentProfile(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.course}-kurs)"
 
+class Teacher(models.Model):
+    full_name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    specialization = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = "Teacher"
+        verbose_name_plural = "Teachers"
+
+    def __str__(self):
+        return self.full_name
+
 class Course(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
+    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, related_name="courses")
 
     class Meta:
         verbose_name = "Course"
